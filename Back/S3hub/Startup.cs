@@ -1,7 +1,11 @@
+using Microsoft.OpenApi.Models;
+
 namespace S3hub;
 
 public class Startup
 {
+    private string cors = "LJChuello";
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -13,6 +17,35 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        AddSwagger(services);
+        services.AddCors(x =>
+        {
+            x.AddPolicy(cors, y =>
+            {
+                y.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+        });
+    }
+
+    private void AddSwagger(IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            var groupName = "v1";
+
+            options.SwaggerDoc(groupName, new OpenApiInfo
+            {
+                Title = $"Foo {groupName}",
+                Version = groupName,
+                Description = "Foo API",
+                Contact = new OpenApiContact
+                {
+                    Name = "Foo Company",
+                    Email = string.Empty,
+                    Url = new Uri("https://foo.com/"),
+                }
+            });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -25,7 +58,15 @@ public class Startup
 
         app.UseHttpsRedirection();
 
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Foo API V1");
+        });
+
         app.UseRouting();
+
+        app.UseCors(cors);
 
         app.UseAuthorization();
 
@@ -34,7 +75,9 @@ public class Startup
             endpoints.MapControllers();
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync("Welcome to running ASP.NET Core on AWS Lambda");
+                //await context.Response.WriteAsync("Welcome to running ASP.NET Core on AWS Lambda");
+                await Task.Delay(1);
+                context.Response.Redirect("/swagger/");
             });
         });
     }
