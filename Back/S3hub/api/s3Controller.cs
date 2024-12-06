@@ -37,7 +37,7 @@ namespace S3hub.api
                     Prefix = directory, // Indica el "directorio" que quieres listar
                     Delimiter = "/", // Esto separa los "directorios" y sus contenidos
                     ContinuationToken = continuationToken,
-                    MaxKeys = 10000,
+                    //MaxKeys = 1000,
                 };
 
                 // Llamada al servicio
