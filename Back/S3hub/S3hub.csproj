@@ -13,7 +13,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="9.0.3" />
-    <PackageReference Include="Boxed.AspNetCore.Swagger" Version="10.0.0" />
     <PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.1.0" />
   </ItemGroup>
 </Project>
