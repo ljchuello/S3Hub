@@ -49,7 +49,7 @@ namespace S3hub.api
                 {
                     result.Add(new oFile
                     {
-                        FileName = directory != "" ? prefix.Replace(directory, string.Empty) : directory,
+                        FileName = directory != "" ? prefix.Replace(directory, string.Empty) : prefix,
                         S3Url = prefix,
                         Key = prefix,
                         MimeType = "/"
