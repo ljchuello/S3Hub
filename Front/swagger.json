@@ -1,0 +1,195 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Foo v1",
+    "description": "Foo API",
+    "contact": {
+      "name": "Foo Company",
+      "url": "https://foo.com/",
+      "email": ""
+    },
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:57512"
+    }
+  ],
+  "paths": {
+    "/api/Repo/ListObjectsV2": {
+      "post": {
+        "tags": [
+          "Repo"
+        ],
+        "parameters": [
+          {
+            "name": "directory",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "/"
+            }
+          },
+          {
+            "name": "getInfo",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/oFile"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Repo/PreSignedUrl": {
+      "post": {
+        "tags": [
+          "Repo"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minExp",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/oAccount"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "oAccount": {
+        "required": [
+          "accessKey",
+          "bucketName",
+          "secretKey",
+          "serviceUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "accessKey": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "secretKey": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "serviceUrl": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "bucketName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cdnUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "oFile": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "S3Url": {
+            "type": "string",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "mimeType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

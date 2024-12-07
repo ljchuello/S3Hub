@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -10,7 +11,7 @@ namespace S3hub.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class s3Controller : ControllerBase
+    public class RepoController : ControllerBase
     {
         [HttpPost("ListObjectsV2")]
         [Produces("application/json")]
@@ -48,7 +49,7 @@ namespace S3hub.api
                 {
                     result.Add(new oFile
                     {
-                        FileName = prefix,
+                        FileName = directory != "" ? prefix.Replace(directory, string.Empty) : directory,
                         S3Url = prefix,
                         Key = prefix,
                         MimeType = "/"
@@ -77,6 +78,38 @@ namespace S3hub.api
             } while (!string.IsNullOrEmpty(continuationToken));
 
             return result;
+        }
+
+        [HttpPost("PreSignedUrl")]
+        [Produces("application/json")]
+        public string PostPreSignedUrl([FromBody] oAccount oAccount, [Required] string key, int minExp = 5)
+        {
+            // Credenciales
+            BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(oAccount.AccessKey, oAccount.SecretKey);
+            AmazonS3Client amazonS3Client = new AmazonS3Client(basicAwsCredentials, new AmazonS3Config
+            {
+                ServiceURL = $"https://{oAccount.ServiceUrl}",
+            });
+
+            // Cremos la url
+            AWSConfigsS3.UseSignatureVersion4 = true;
+            GetPreSignedUrlRequest getPreSignedUrlRequest = new GetPreSignedUrlRequest
+            {
+                BucketName = oAccount.BucketName,
+                Key = key,
+                Verb = HttpVerb.GET,
+                Expires = DateTime.UtcNow.AddMinutes(Math.Abs(minExp)),
+            };
+
+            // Obtenemos
+            string urlString = amazonS3Client.GetPreSignedURL(getPreSignedUrlRequest);
+
+            // CDN
+            if (string.IsNullOrWhiteSpace(oAccount.CdnUrl) == false)
+                urlString = urlString.Replace($"https://{oAccount.BucketName}.{oAccount.ServiceUrl}/", $"https://{oAccount.CdnUrl}/");
+
+            // Devolvemos
+            return urlString;
         }
     }
 }

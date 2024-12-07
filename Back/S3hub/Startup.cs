@@ -45,6 +45,12 @@ public class Startup
                     Url = new Uri("https://foo.com/"),
                 }
             });
+
+            if (Environment.MachineName == "DESKTOP-DUJGKJ0")
+                options.AddServer(new OpenApiServer
+                {
+                    Url = "https://localhost:57512"
+                });
         });
     }
 

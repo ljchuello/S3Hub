@@ -1,8 +1,31 @@
 <div class="row">
-    <div class="col-6">1</div>
-    <div class="col-6">
-        <button mat-raised-button>
-            xD
+  <div class="col-6">1</div>
+  <div class="col-6">
+    <button mat-raised-button>
+      xD
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <table class="col-12">
+    <thead>
+    <tr>
+      <td>File</td>
+      <td>Mime Type</td>
+      <td>Navegar</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of oFileList">
+      <td>
+        <button mat-raised-button type="button" (click)="btnNavegar(row!)">
+          {{ row!.fileName! }}
         </button>
-    </div>
+      </td>
+      <td>{{ row!.mimeType! }}</td>
+      <td>&nbsp;</td>
+    </tr>
+    </tbody>
+  </table>
 </div>

@@ -20,5 +20,8 @@ namespace S3hub.Dto
         [Required]
         [JsonPropertyName("bucketName")]
         public string BucketName { set; get; }
+
+        [JsonPropertyName("cdnUrl")]
+        public string? CdnUrl { set; get; }
     }
 }
