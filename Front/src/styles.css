@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@import url(https://fonts.bunny.net/css?family=ubuntu:400);
+@import url(https://fonts.googleapis.com/icon?family=Material+Icons);
+
+html, body {
+  height: 100%;
+}
+
+div {
+  margin: 0 !important;
+}
+
+body {
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
+}
