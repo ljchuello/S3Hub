@@ -12,15 +12,15 @@ namespace S3hub.api
     [ApiController]
     public class s3Controller : ControllerBase
     {
-        [HttpGet("ListObjectsV2")]
+        [HttpPost("ListObjectsV2")]
         [Produces("application/json")]
-        public async Task<List<oFile>> GetListObjectsV2([FromHeader][Required] string accessKey, [Required][FromHeader] string secretKey, [Required][FromHeader] string serviceUrl, [Required] string bucketName, [Required] string directory = "/", bool getInfo = true)
+        public async Task<List<oFile>> PostListObjectsV2([FromBody] oAccount oAccount, [Required] string directory = "/", bool getInfo = true)
         {
             // Credenciales
-            BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+            BasicAWSCredentials basicAwsCredentials = new BasicAWSCredentials(oAccount.AccessKey, oAccount.SecretKey);
             AmazonS3Client amazonS3Client = new AmazonS3Client(basicAwsCredentials, new AmazonS3Config
             {
-                ServiceURL = $"https://{serviceUrl}",
+                ServiceURL = $"https://{oAccount.ServiceUrl}",
             });
 
             // Resultado
@@ -33,7 +33,7 @@ namespace S3hub.api
                 // Solicitud para listar objetos
                 ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request
                 {
-                    BucketName = bucketName,
+                    BucketName = oAccount.BucketName,
                     Prefix = directory, // Indica el "directorio" que quieres listar
                     Delimiter = "/", // Esto separa los "directorios" y sus contenidos
                     ContinuationToken = continuationToken,
@@ -66,7 +66,7 @@ namespace S3hub.api
                     result.Add(new oFile
                     {
                         FileName = fileInfo.Name,
-                        S3Url = $"https://{bucketName}.{serviceUrl}/{directory}{fileInfo.Name}",
+                        S3Url = $"https://{oAccount.BucketName}.{oAccount.ServiceUrl}/{directory}{fileInfo.Name}",
                         Key = $"{directory}{fileInfo.Name}",
                         MimeType = MimeTypeMap.GetMimeType(s3Object.Key)
                     });

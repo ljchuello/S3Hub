@@ -1,0 +1,7 @@
+https://www.npmjs.com/package/ng-openapi-gen
+
+npm install -g ng-openapi-gen
+
+ng-openapi-gen --input https://localhost:57512/swagger/v1/swagger.json --output src/app/api
+
+ng-openapi-gen --input swagger.json --output src/app/api
